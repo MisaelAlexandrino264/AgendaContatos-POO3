@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import Contato from 'src/app/model/entities/Contato';
 import { ContatoService } from 'src/app/model/services/contato.service';
+import { FirebaseService } from 'src/app/model/services/firebase.service';
 
 @Component({
   selector: 'app-editar',
@@ -9,7 +10,6 @@ import { ContatoService } from 'src/app/model/services/contato.service';
   styleUrls: ['./editar.page.scss'],
 })
 export class EditarPage implements OnInit {
-  indice: number;
   contato: Contato;
   nome: string;
   telefone: string;
@@ -18,21 +18,18 @@ export class EditarPage implements OnInit {
   edicao: boolean = false;
 
 
-  constructor(private contatoService: ContatoService,private router: Router ,private actRoute: ActivatedRoute) {
+  constructor(private contatoService: ContatoService,private firebaseService: FirebaseService ,private router: Router) {
     
    }
 
   ngOnInit() {
-    this.actRoute.params.subscribe((parametros)=> {
-      if(parametros["indice"]){
-        this.indice = parametros["indice"];
-        this.contato = this.contatoService.obterPorIndice(parametros["indice"]);
-      }
-    });
-    this.nome = this.contato.nome;
-    this.telefone = this.contato.telefone;
-    this.email = this.contato.email;
-    this.genero = this.contato.genero;
+    this.contato = history.state.contato;
+    if(this.contato){
+      this.nome = this.contato.nome;
+      this.telefone = this.contato.telefone;
+      this.email = this.contato.email;
+      this.genero = this.contato.genero;
+    }
   }
 
   habilitar(){
@@ -45,16 +42,29 @@ export class EditarPage implements OnInit {
 
   excluir(){
     //alert de confirmação
-    this.contatoService.excluir(this.indice);
-    this.router.navigate(['/home']);
+    this.firebaseService.excluir(this.contato)
+    .then(()=>{
+      this.router.navigate(['/home']);
+    })
+    .catch((error)=>{
+      console.log(error);
+    
+    })
   }
   salvar(){
     let novo : Contato = new Contato(this.nome, this.telefone);
     novo.email = this.email;
     novo.genero = this.genero;
     //alert de validação
-    this.contatoService.editar(this.indice, novo);
-    this.router.navigate(['/home']);
+    this.firebaseService.editar(this.contato.id, novo)
+    .then(()=>{
+      this.router.navigate(['/home']);
+    })
+    .catch((error)=>{
+      console.log(error);
+    
+    })
+  
   }
 
 }

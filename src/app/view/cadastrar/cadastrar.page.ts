@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import Contato from 'src/app/model/entities/Contato';
@@ -10,29 +11,41 @@ import { FirebaseService } from 'src/app/model/services/firebase.service';
   styleUrls: ['./cadastrar.page.scss'],
 })
 export class CadastrarPage implements OnInit {
-  nome: string;
-  telefone: string;
-  email: string;
-  genero: number;
+  formCadastrar: FormGroup;
+  isSubmitted: boolean = false;
 
 
-  constructor(private alertController: AlertController, private firebaseService: FirebaseService ,private router: Router) { }
+  constructor(private alertController: AlertController, private firebaseService: FirebaseService,private formBuilder: FormBuilder ,private router: Router) { }
 
   
   ngOnInit() {
+    this.formCadastrar = this.formBuilder.group({
+      nome: ['', [Validators.required, Validators.minLength(3)]],
+      telefone: ['', [Validators.required, Validators.minLength(8)]],
+      email: ['', [Validators.required, Validators.email]],
+      genero: ['', [Validators.required]],
+    });
   }
   
+  get errorControl(){
+    return this.formCadastrar.controls;
+  }
+
+  submitForm(){
+    this.isSubmitted = true;
+    if(!this.formCadastrar.valid){
+      this.presentAlert('Erro ao Cadastrar','Todos os campos são Obrigatórios.');
+      return false;
+    }else{
+      this.cadastrar();
+    }
+  }
   cadastrar(){
-    if(this.nome && this.telefone){
-      let c: Contato = new Contato(this.nome, this.telefone);
-      if(this.email){
-        c.email = this.email;
-      }
-      if(this.genero){
-        c.genero = this.genero;
-      }else{
-        c.genero = 0;
-      }
+      let c: Contato = new Contato(this.formCadastrar.value['nome'],
+        this.formCadastrar.value['telefone']);
+      c.email = this.formCadastrar.value['email'];
+      c.genero = this.formCadastrar.value['genero'];
+
       this.firebaseService.cadastrar(c)
       .then(()=>{
         this.router.navigate(['/home']);
@@ -41,11 +54,6 @@ export class CadastrarPage implements OnInit {
         console.log(error);
         this.presentAlert('Erro ao Cadastrar', 'Erro ao salvar Contato');
       }) 
-    }else{
-      this.presentAlert('Erro ao Cadastrar','Todos os campos são Obrigatórios.');
-    }
-    this.nome = "";
-    this.telefone = "";
     
   }
 

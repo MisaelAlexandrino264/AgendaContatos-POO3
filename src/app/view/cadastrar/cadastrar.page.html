@@ -6,23 +6,26 @@
 
 <ion-content>
   <ion-list>
+    <form [formGroup]="formCadastrar" (ngSubmit)="submitForm()"
+    novalidate>
     <ion-item>
-      <ion-input [(ngModel)]="nome" label="Nome" placeholder="Insira o nome"></ion-input>
+      <ion-input formControlName="nome" label="Nome" placeholder="Insira o nome"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-input [(ngModel)]="telefone" type="number" label="Telefone" placeholder="Insira o telefone"></ion-input>
+      <ion-input formControlName="telefone" type="number" label="Telefone" placeholder="Insira o telefone"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-input [(ngModel)]="email" label="email" placeholder="Insira o email"></ion-input>
+      <ion-input formControlName="email" label="email" placeholder="Insira o email"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-select [(ngModel)]="genero" label="Gênero" placeholder="Selecione"> 
+      <ion-select formControlName="genero" label="Gênero" placeholder="Selecione"> 
       <ion-select-option value="0"> Não Declarado</ion-select-option>
       <ion-select-option value="1"> Feminino</ion-select-option>
       <ion-select-option value="2"> Masculino</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-button (click)="cadastrar()" expand="full">Cadastrar</ion-button>
+    <ion-button  type="submit" expand="full">Cadastrar</ion-button>
+  </form>
   </ion-list>
  
 </ion-content>

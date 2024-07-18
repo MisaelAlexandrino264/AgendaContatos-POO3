@@ -12,8 +12,8 @@
     <ion-list-header>
       <ion-label>Meus Contatos:</ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let contato of contatos; let i = index">
-      <ion-label (click)="editar(i)">{{contato.nome}}</ion-label>
+    <ion-item *ngFor="let contato of contatos">
+      <ion-label (click)="editar(contato)">{{contato.nome}}</ion-label>
     </ion-item>
   </ion-list>
 

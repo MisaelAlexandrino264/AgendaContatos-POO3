@@ -16,7 +16,7 @@ const routes: Routes = [
     loadChildren: () => import('./view/cadastrar/cadastrar.module').then( m => m.CadastrarPageModule)
   },
   {
-    path: 'editar/:indice',
+    path: 'editar',
     loadChildren: () => import('./view/editar/editar.module').then( m => m.EditarPageModule)
   },
 ];
