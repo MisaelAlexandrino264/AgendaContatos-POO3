@@ -11,18 +11,51 @@
     <ion-item>
       <ion-input formControlName="nome" label="Nome" placeholder="Insira o nome"></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-input formControlName="telefone" type="number" label="Telefone" placeholder="Insira o telefone"></ion-input>
+    <ion-item *ngIf="((errorControl['nome'].touched || errorControl['nome'].dirty) && errorControl['nome'].errors)">
+      <span *ngIf="errorControl['nome'].errors['required']">
+        Nome é Obrigatório.
+      </span>
+      <span *ngIf="errorControl['nome'].errors['minlength']">
+        Nome precisa ter pelo menos 3 caracters.
+      </span>
     </ion-item>
+
+    <ion-item>
+      <ion-input formControlName="telefone" label="Telefone" placeholder="Insira o telefone"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="((errorControl['telefone'].touched || errorControl['telefone'].dirty) && errorControl['telefone'].errors)">
+      <span *ngIf="errorControl['telefone'].errors['required']">
+        Telefone é Obrigatório.
+      </span> 
+      <span *ngIf="errorControl['telefone'].errors['minlength']">
+        Telefone precisa ter pelo menos 8 caracters. 
+      </span> 
+    </ion-item>
+
     <ion-item>
       <ion-input formControlName="email" label="email" placeholder="Insira o email"></ion-input>
     </ion-item>
+    <ion-item *ngIf="((errorControl['email'].touched || errorControl['email'].dirty) && errorControl['email'].errors)">
+      <span *ngIf="errorControl['email'].errors['required']">
+        Email é Obrigatório.
+      </span>
+      <span *ngIf="errorControl['email'].errors['email']">
+        Formato de email incorreto
+      </span> 
+ 
+    </ion-item>
+
     <ion-item>
       <ion-select formControlName="genero" label="Gênero" placeholder="Selecione"> 
       <ion-select-option value="0"> Não Declarado</ion-select-option>
       <ion-select-option value="1"> Feminino</ion-select-option>
       <ion-select-option value="2"> Masculino</ion-select-option>
       </ion-select>
+    </ion-item>
+    <ion-item *ngIf="((errorControl['genero'].touched || errorControl['genero'].dirty) && errorControl['genero'].errors)">
+      <span *ngIf="errorControl['genero'].errors['required']">
+        Gênero é Obrigatório.
+      </span>   
     </ion-item>
     <ion-button  type="submit" expand="full">Cadastrar</ion-button>
   </form>
